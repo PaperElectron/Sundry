@@ -1,0 +1,31 @@
+{
+  "name": "OctoR",
+  "version": "0.0.0",
+  "description": "A respectably rugged, remarkably reliable, reconfigurable, round-robin router.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com:PaperElectron/OctoR.git"
+  },
+  "keywords": [
+    "router",
+    "http",
+    "proxy",
+    "round-robin"
+  ],
+  "author": "Jim <monstertke@paperelectron.com> (http://paperelectron.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/PaperElectron/OctoR/issues"
+  },
+  "homepage": "https://github.com/PaperElectron/OctoR",
+  "dependencies": {
+    "hiredis": "^0.1.17",
+    "http-proxy": "^1.8.1",
+    "lodash": "^3.1.0",
+    "redis": "^0.12.1"
+  }
+}
