@@ -1,14 +1,21 @@
 {
-  "name": "OctoR",
+  "name": "OctoRP",
   "version": "0.0.0",
-  "description": "A respectably rugged, remarkably reliable, reconfigurable, round-robin router.",
+  "description": "A respectably rugged, remarkably reliable, reconfigurable, round-robin, reverse proxy.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "test": "mocha --ui tdd --reporter spec",
+    "hint": "jshint ./**/*.js",
+    "generateCA": "./npm_scripts/generateCA.sh"
+  },
+  "preferGlobal": "true",
+  "bin": {
+    "octorp": "cli/index.js"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com:PaperElectron/OctoR.git"
+    "url": "git://github.com:PaperElectron/OctoRP.git"
   },
   "keywords": [
     "router",
@@ -19,13 +26,23 @@
   "author": "Jim <monstertke@paperelectron.com> (http://paperelectron.com/)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/PaperElectron/OctoR/issues"
+    "url": "https://github.com/PaperElectron/OctoRP/issues"
   },
-  "homepage": "https://github.com/PaperElectron/OctoR",
+  "homepage": "https://github.com/PaperElectron/OctoRP",
   "dependencies": {
+    "bluebird": "^2.9.6",
+    "chalk": "^0.5.1",
+    "commander": "^2.6.0",
     "hiredis": "^0.1.17",
     "http-proxy": "^1.8.1",
+    "inquirer": "^0.8.0",
     "lodash": "^3.1.0",
-    "redis": "^0.12.1"
+    "redis": "^0.12.1",
+    "var": "^0.1.3"
+  },
+  "devDependencies": {
+    "chai": "^2.0.0",
+    "jshint": "^2.6.0",
+    "mocha": "^2.1.0"
   }
 }
