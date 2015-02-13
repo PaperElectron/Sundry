@@ -1,6 +1,6 @@
 {
   "name": "OctoRP",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A respectably rugged, remarkably reliable, reconfigurable, round-robin, reverse proxy.",
   "main": "index.js",
   "scripts": {
