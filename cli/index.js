@@ -10,9 +10,10 @@ var path = require('path');
 var url = require('url');
 var redisHost = url.parse(env.octorp_redis_url);
 var redis = require('redis');
+var packageVersion = require(path.join(__dirname, '../', 'package.json')).version;
 
 app
-  .version('0.0.1')
+  .version(packageVersion)
   .option('-i --interactive', 'Start interactive management mode.');
 
 app
