@@ -1,6 +1,6 @@
-#OctoRP
+# OctoRP
 
-###The respectably rugged, remarkably reliable, reconfigurable, round-robin reverse proxy.
+### The respectably rugged, remarkably reliable, reconfigurable, round-robin reverse proxy.
 
 
 OctoRP is a caching, dynamically configurable, reverse proxy, written in NodeJS and backed by redis.
