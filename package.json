@@ -1,6 +1,6 @@
 {
   "name": "octorp",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A respectably rugged, remarkably reliable, reconfigurable, round-robin, reverse proxy.",
   "main": "index.js",
   "scripts": {
