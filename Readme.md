@@ -18,7 +18,7 @@ OctoRP is a caching, dynamically configurable, reverse proxy, written in NodeJS 
 
 ## Installation and setup
 
-#### Requirements
+### Requirements
 
 * Redis server (with events enabled) 
   * Preferably local to the OctoRP server, bare minimum on the local network.
@@ -27,14 +27,14 @@ OctoRP is a caching, dynamically configurable, reverse proxy, written in NodeJS 
   * [More Info on Redis keyspace events](http://redis.io/topics/notifications)
 
 * NodeJS v.11.0 +
-* [Upstart](http://upstart.ubuntu.com/)
+* [AuthBind](http://manpages.ubuntu.com/manpages/hardy/man1/authbind.1.html) for port 80/443 bindings as non root user.
+* [Upstart](http://upstart.ubuntu.com/) for running as a system daemon.
 
-#### Install OctoRP
+### Install OctoRP
 ```shell
 $ npm install -g octorp
 ```
     
-#### Test / Development
 ###### Start an interactive session to add, remove and list hosts and their corresponding backends.
    
 ```shell 
@@ -56,10 +56,53 @@ $ octorp start
 ```
 Edit `~/.octorp/config.json` with the relevant settings (can/will be overidden with any ENV variables that are set.
 ***
+
+#### Production (some recent flavor of Ubuntu assumed.)
+###### Create a new system user
+```shell
+$ sudo adduser --disabled-password octorp
+```
+
+###### Install/configure authbind
+```shell
+$ sudo apt-get install authbind
+$ sudo touch /etc/authbind/byport/80 /etc/authbind/byport/443
+$ sudo chown octorp:octorp /etc/authbind/byport/80 /etc/authbind/byport/443
+$ sudo chmod 755 /etc/authbind/byport/80 /etc/authbind/byport/443
+```
+
+###### Create octorp.conf upstart file.
+
+```shell
+$ sudo touch /etc/init/octorp.conf
+$ sudo <vi/emacs/nano/ed> /etc/init/octorp.conf 
+# no flame wars here
+```
+
+```
+description "OctoRP Dynamic Router"
+author      "PaperElectron"
+
+start on (local-filesystems and net-device-up IFACE=eth0)
+stop on shutdown
+
+# Automatically Respawn:
+respawn
+respawn limit 5 60
+ 
+script
+  export HOME=/home/octorp
+  export NODE_ENV=production
+  exec start-stop-daemon --start -u octorp --exec /usr/bin/authbind octorp start
+end script
+```
+#### Test / Development
 ###### Generate a self signed cert.
+Browsers will flag this as an insecure certificate.
+
 ```shell
 $ cd ~/.octorp/ssl
-$ openssl genrsa -out server.key 2048
+$ openssl genrsa -out key.pem 2048
 $ openssl req -new -key key.pem -out server.csr
-
+$ openssl x509 -req -days 365 -in server.csr -signkey key.pem -out cert.pem
 ```
