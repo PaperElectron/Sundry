@@ -1,14 +1,14 @@
 #! /usr/bin/env node
 process.stdout.write('\033c');
 
-var env = require('../lib/config');
+//var env = require('../lib/config');
 
 var app = require('commander');
 var _ = require('lodash');
 var chalk = require('chalk');
 var path = require('path');
 var url = require('url');
-var redisHost = url.parse(env.octorp_redis_url);
+//var redisHost = url.parse(env.octorp_redis_url);
 var redis = require('redis');
 var packageVersion = require(path.join(__dirname, '../', 'package.json')).version;
 
@@ -20,7 +20,7 @@ app
   .command('start')
   .description('Start the OctoRP proxy server.')
   .action(function(env, options){
-    require(path.join(__dirname, '../', 'lib/application'))
+    require(path.join(__dirname, '../'))
   })
   .on('--help', function(){
     console.log('  Example:');
@@ -34,8 +34,9 @@ app
   .description('Quickly view the routes registered with the OctoRP server. ' +
   'Optionally list backend routes for [host].')
   .action(function(host){
-    var client = redis.createClient(redisHost.port, redisHost.hostname);
+    var client = connectRedis();
     var rredis;
+
     client.on('ready', function(){
       rredis = require('./redis')(client);
       if(host){
@@ -68,8 +69,9 @@ app
   .command('add <host> <ip>')
   .description('Quickly add a host and backend.')
   .action(function(host, ip){
-    var client = redis.createClient(redisHost.port, redisHost.hostname);
+    var client = connectRedis()
     var rredis;
+
     client.on('ready', function(){
       rredis = require('./redis')(client);
       rredis.addHost(host, ip).then(function(status){
@@ -89,7 +91,27 @@ app
     console.log('  Example:');
     console.log();
     console.log('    add some.host.com 127.0.0.1:10256')
-  });;
+  });
+
+app
+  .command('config')
+  .description('Allows editing of the config file located in ~/.octorp')
+  .option('-b --build', 'Creates a config file from default template.')
+  .action(function(options){
+    if(options.build){
+      require('./../lib/buildConfig')(true)
+    }
+    else {
+      console.log('No options given to config command');
+      console.log('octorp config --help for more info.')
+    }
+  })
+  .on('--help', function(){
+    console.log('  Example:');
+    console.log();
+    console.log('    octorp config -b');
+    console.log();
+  });
 
 app.parse(process.argv);
 
@@ -99,4 +121,16 @@ if(!process.argv.slice(2).length){
 
 if(app.interactive){
   require('./interactive')
+}
+
+function connectRedis(){
+  var env = require('../lib/config');
+  var redisHost = url.parse(env.octorp_redis_url);
+  var client = redis.createClient(redisHost.port, redisHost.hostname, {max_attempts: 1});
+  client.on('error', redisError)
+  return client
+}
+function redisError(e){
+  console.log(chalk.red("Please make sure the value of 'octorp_redis_url' is correct in ~/.octorp/config.json \n" +
+  "Or the octorp_redis_url environment variable is set to a valid redis url."))
 }

@@ -3,7 +3,6 @@ var path = require('path')
 var mockRedis = require('./mocks/Redis_mock');
 var Router = require(path.join(process.cwd(), 'lib/Router'))
 
-
 suite("Router", function() {
 
   suite("Host lookup", function(){
@@ -50,7 +49,6 @@ suite("Router", function() {
 
   suite('Caching', function(){
     var router = new Router({client: mockRedis, ttl: .4})
-    console.log(router)
     test("Should cache the host provided", function(){
       var cached = router.cacheRoute("an.added.host", ["127.0.0.1:8000"])
       expect(cached.routes).to.be.a('array')

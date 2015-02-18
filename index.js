@@ -2,9 +2,6 @@
  *  Server Entry point.
  */
 
-var path, fs;
 
-path = require('path');
-fs = require('fs');
-
-require( path.join(process.cwd(), './lib/application.js') );
+var path = require('path');
+require( path.join(__dirname, './lib/application.js') );
