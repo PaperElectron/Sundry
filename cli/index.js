@@ -8,7 +8,7 @@ var _ = require('lodash');
 var chalk = require('chalk');
 var path = require('path');
 var url = require('url');
-//var redisHost = url.parse(env.octorp_redis_url);
+var logger = require(path.join(__dirname, '../','lib', 'logger'))
 var redis = require('redis');
 var packageVersion = require(path.join(__dirname, '../', 'package.json')).version;
 
@@ -94,22 +94,39 @@ app
   });
 
 app
-  .command('config')
+  .command('config [action] [key] [val]')
   .description('Allows editing of the config file located in ~/.octorp')
-  .option('-b --build', 'Creates a config file from default template.')
-  .action(function(options){
-    if(options.build){
-      require('./../lib/buildConfig')(true)
-    }
-    else {
-      console.log('No options given to config command');
-      console.log('octorp config --help for more info.')
+  .action(function(action, k, v){
+    switch(action) {
+      case 'build':
+        logger.enableLogging(true)
+        require('./../lib/buildConfig')(true)
+        break;
+      case 'edit':
+        logger.enableLogging(false)
+        require('./../lib/editConfig').edit(k, v)
+        break
+      case 'list':
+        logger.enableLogging(false)
+        require('./../lib/editConfig').list()
+        break
+      default:
+        console.log('No options given to config command');
+        console.log('octorp config --help for more info.')
+
     }
   })
   .on('--help', function(){
     console.log('  Example:');
     console.log();
-    console.log('    octorp config -b');
+    console.log('    octorp config build');
+    console.log('      Builds skeleton config in ~/.octorp');
+    console.log();
+    console.log('    octorp config edit [key] [value]');
+    console.log('      Sets config [key] to [value].');
+    console.log();
+    console.log('    octorp config list');
+    console.log('      Lists config keys, values.');
     console.log();
   });
 
