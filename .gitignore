@@ -6,3 +6,4 @@
 .DS_Store
 env.json
 /test/mocks/.octorp
+/scratch
