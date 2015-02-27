@@ -51,6 +51,8 @@ $ octorp config build
 ```
 This will create `~/.octorp/`, `~/.octorp/ssl` and `~/.octorp/config.json`
 
+[Config explanation and defaults](https://github.com/PaperElectron/OctoRP/wiki/Configuration-Values.)
+
 #### Default files
 
 OctoRP uses some generic files for its default host, 404 and 500 error pages.
