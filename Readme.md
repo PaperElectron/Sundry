@@ -30,32 +30,34 @@ OctoRP is a caching, dynamically configurable, reverse proxy, written in NodeJS 
 * [AuthBind](http://manpages.ubuntu.com/manpages/hardy/man1/authbind.1.html) for port 80/443 bindings as non root user.
 * [Upstart](http://upstart.ubuntu.com/) for running as a system daemon.
 
-### Install OctoRP
+## Install OctoRP
+
+#### Installation
+
 ```shell
 $ npm install -g octorp
 ```
-    
-###### Start an interactive session to add, remove and list hosts and their corresponding backends.
-   
-```shell 
-$ octorp -i 
-```
-Need more help?
-```shell
-$ octorp
-$ octorp --help
-$ octorp <add/list/start> --help
-```
-***
-###### Initial server startup
-This will create `~/.octorp/`, `~/.octorp/ssl` and `~/.octorp/`config.json
-then exit.  
+
+#### Configuration 
+OctoRP relies on several configuration values, all of which can be provided in two ways.
+
+1. Enviornment Variables. (Useful for running as a system daemon)
+2. Values in $HOME/.octorp/config.json
+
+You can generate a skeleton config by running...
 
 ```shell
-$ octorp start
+$ octorp config build
 ```
-Edit `~/.octorp/config.json` with the relevant settings (can/will be overidden with any ENV variables that are set.
-***
+This will create `~/.octorp/`, `~/.octorp/ssl` and `~/.octorp/config.json`
+
+#### Default files
+
+OctoRP uses some generic files for its default host, 404 and 500 error pages.
+You can override any of these by placing the correctly named file in 
+`~/.octorp/html/<index/404/5xx>.html`
+
+## Run OctoRP
 
 #### Production (some recent flavor of Ubuntu assumed.)
 ###### Create a new system user
