@@ -1,7 +1,7 @@
 {
-  "name": "octorp",
+  "name": "sundry",
   "version": "0.0.13",
-  "description": "A respectably rugged, remarkably reliable, reconfigurable, round-robin, reverse proxy.",
+  "description": "A dynamically configurable, load balancing, reverse proxy.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -11,11 +11,11 @@
   },
   "preferGlobal": "true",
   "bin": {
-    "octorp": "cli/index.js"
+    "sundry": "cli/index.js"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com:PaperElectron/OctoRP.git"
+    "url": "git://github.com:PaperElectron/Sundry.git"
   },
   "keywords": [
     "router",
@@ -26,9 +26,9 @@
   "author": "Jim <monstertke@paperelectron.com> (http://paperelectron.com/)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/PaperElectron/OctoRP/issues"
+    "url": "https://github.com/PaperElectron/Sundry/issues"
   },
-  "homepage": "https://github.com/PaperElectron/OctoRP",
+  "homepage": "https://github.com/PaperElectron/Sundry",
   "dependencies": {
     "bluebird": "^2.9.6",
     "chalk": "^0.5.1",
