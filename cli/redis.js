@@ -1,8 +1,8 @@
 var Promise = require('bluebird');
 var redis = Promise.promisifyAll(require('redis'));
 var url = require('url');
-var env = require('../lib/config');
-var redisHost = url.parse(env.octorp_redis_url);
+var env = require('../lib/Configuration/config');
+var redisHost = url.parse(env.sundry_redis_url);
 
 module.exports = function(client){
   return {

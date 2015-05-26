@@ -4,4 +4,4 @@
 
 
 var path = require('path');
-require( path.join(__dirname, './lib/application.js') );
+require( path.join(__dirname, './lib/Sundry.js') );

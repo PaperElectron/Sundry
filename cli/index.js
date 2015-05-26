@@ -18,20 +18,20 @@ app
 
 app
   .command('start')
-  .description('Start the OctoRP proxy server.')
+  .description('Start the Sundry proxy server.')
   .action(function(env, options){
     require(path.join(__dirname, '../'))
   })
   .on('--help', function(){
     console.log('  Example:');
     console.log();
-    console.log('    octorp start -d');
+    console.log('    sundry start -d');
     console.log();
   });
 
 app
   .command('list [host]')
-  .description('Quickly view the routes registered with the OctoRP server. ' +
+  .description('Quickly view the routes registered with the Sundry server. ' +
   'Optionally list backend routes for [host].')
   .action(function(host){
     var client = connectRedis();
@@ -95,37 +95,37 @@ app
 
 app
   .command('config [action] [key] [val]')
-  .description('Allows editing of the config file located in ~/.octorp')
+  .description('Allows editing of the config file located in ~/.sundry')
   .action(function(action, k, v){
     switch(action) {
       case 'build':
         logger.enableLogging(true)
-        require('./../lib/buildConfig')(true)
+        require('./../lib/Configuration/buildConfig')(true)
         break;
       case 'edit':
         logger.enableLogging(false)
-        require('./../lib/editConfig').edit(k, v)
+        require('./../lib/Configuration/editConfig').edit(k, v)
         break
       case 'list':
         logger.enableLogging(false)
-        require('./../lib/editConfig').list()
+        require('./../lib/Configuration/editConfig').list()
         break
       default:
         console.log('No options given to config command');
-        console.log('octorp config --help for more info.')
+        console.log('sundry config --help for more info.')
 
     }
   })
   .on('--help', function(){
     console.log('  Example:');
     console.log();
-    console.log('    octorp config build');
-    console.log('      Builds skeleton config in ~/.octorp');
+    console.log('    sundry config build');
+    console.log('      Builds skeleton config in ~/.sundry');
     console.log();
-    console.log('    octorp config edit [key] [value]');
+    console.log('    sundry config edit [key] [value]');
     console.log('      Sets config [key] to [value].');
     console.log();
-    console.log('    octorp config list');
+    console.log('    sundry config list');
     console.log('      Lists config keys, values.');
     console.log();
   });
@@ -141,13 +141,13 @@ if(app.interactive){
 }
 
 function connectRedis(){
-  var env = require('../lib/config');
-  var redisHost = url.parse(env.octorp_redis_url);
+  var env = require('../lib/Configuration/config');
+  var redisHost = url.parse(env.sundry_redis_url);
   var client = redis.createClient(redisHost.port, redisHost.hostname, {max_attempts: 1});
   client.on('error', redisError)
   return client
 }
 function redisError(e){
-  console.log(chalk.red("Please make sure the value of 'octorp_redis_url' is correct in ~/.octorp/config.json \n" +
-  "Or the octorp_redis_url environment variable is set to a valid redis url."))
+  console.log(chalk.red("Please make sure the value of 'sundry_redis_url' is correct in ~/.sundry/config.json \n" +
+  "Or the sundry_redis_url environment variable is set to a valid redis url."))
 }
