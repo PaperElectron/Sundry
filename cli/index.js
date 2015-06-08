@@ -25,7 +25,7 @@ app
   .on('--help', function(){
     console.log('  Example:');
     console.log();
-    console.log('    sundry start -d');
+    console.log('    sundry start');
     console.log();
   });
 
