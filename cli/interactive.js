@@ -1,6 +1,6 @@
-var env = require('../lib/Configuration/config');
+var config = require('../lib/Configuration/configLoader')
 var url = require('url');
-var redisHost = url.parse(env.sundry_redis_url);
+
 var redis = require('redis');
 var inquirer = require('inquirer');
 var Promise = require('bluebird');
@@ -8,16 +8,21 @@ var chalk = require('chalk');
 var _ = require('lodash');
 Promise.promisifyAll(inquirer);
 
-var rredis;
-var client = Promise.promisifyAll(redis.createClient(redisHost.port, redisHost.hostname));
-client.on('ready', function(){
-  rredis = require('./redis')(client);
-  rredis.listHosts().then(function(keys){
-    console.log(keys)
-    mainList()
-  })
+var red;
+config.on('ready', function(){
+  var env = config.loadedConfig
+  var redisHost = url.parse(env.sundry_redis_url);
+  var client = Promise.promisifyAll(redis.createClient(redisHost.port, redisHost.hostname));
+  client.on('ready', function(){
+    red = require('./redis')(client);
+    red.listHosts().then(function(keys){
+      console.log(keys)
+      mainList()
+    })
 
-});
+  });
+})
+
 
 function mainList() {
   process.stdout.write('\033c');
@@ -89,7 +94,7 @@ function confirmPrompt(value){
  * Action prompts
  */
 function listRoutes() {
-  rredis.listHosts()
+  red.listHosts()
     .bind({})
     .then(function(routeList) {
       return Prompt({
@@ -103,7 +108,7 @@ function listRoutes() {
     .then(function(route) {
       if(route === 'exit'){ return this.exit = true }
       this.route = route;
-      return rredis.listBackends(route)
+      return red.listBackends(route)
 
     })
     .then(function(backends) {
@@ -134,7 +139,7 @@ function addRoute() {
     })
     .then(function(confirm) {
       if(confirm){
-        return rredis.addHost(this.host, this.ip)
+        return red.addHost(this.host, this.ip)
       }
       return confirm
     })
@@ -149,7 +154,7 @@ function addRoute() {
 }
 
 function removeRoute() {
-  rredis.listHosts()
+  red.listHosts()
     .bind({})
     .then(function(routeList) {
       return Prompt({
@@ -170,7 +175,7 @@ function removeRoute() {
     .then(function(confirm) {
       if(this.exit){ return 'exit' }
       if(confirm) {
-        return rredis.deleteHost(this.host)
+        return red.deleteHost(this.host)
       }
       return confirm
     })
@@ -184,7 +189,7 @@ function removeRoute() {
 }
 
 function addBackend(){
-  rredis.listHosts()
+  red.listHosts()
     .bind({})
     .then(function(routeList) {
       return Prompt({
@@ -219,7 +224,7 @@ function addBackend(){
     .then(function(confirm) {
       if(this.exit){ return }
       if(confirm){
-        return rredis.addHost(this.host, this.ip)
+        return red.addHost(this.host, this.ip)
       }
       return confirm
     })
@@ -235,7 +240,7 @@ function addBackend(){
 
 }
 function removeBackend(){
-  rredis.listHosts()
+  red.listHosts()
     .bind({})
     .then(function(routeList) {
       return Prompt({
@@ -249,7 +254,7 @@ function removeBackend(){
     .then(function(host) {
       if(host === 'exit'){ return this.exit = true }
       this.host = host;
-      return rredis.listBackends(host)
+      return red.listBackends(host)
 
     })
     .then(function(backends) {
@@ -270,7 +275,7 @@ function removeBackend(){
     .then(function(confirm){
       if(this.exit || this.restart){ return }
       if(confirm){
-        return rredis.deleteBackend(this.host, this.ip)
+        return red.deleteBackend(this.host, this.ip)
       }
     })
     .then(function(status){
