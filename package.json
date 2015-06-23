@@ -34,7 +34,7 @@
     "chalk": "^0.5.1",
     "commander": "^2.6.0",
     "cookies": "^0.5.0",
-    "hiredis": "^0.1.17",
+    "hiredis": "^0.4.0",
     "http-proxy": "^1.8.1",
     "inquirer": "^0.8.0",
     "lodash": "^3.1.0",
