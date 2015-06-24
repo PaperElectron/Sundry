@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "NODE_ENV=test mocha --ui tdd --reporter spec",
+    "test": "NODE_ENV=test mocha --ui bdd --reporter spec",
     "hint": "jshint ./**/*.js",
     "generateCA": "./npm_scripts/generateCA.sh"
   },

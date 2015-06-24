@@ -28,20 +28,20 @@ after(function(done){
   rimraf(path.join(__dirname, 'mocks/testHome/.sundry'), done)
 });
 
-suite("Configuration creation and editing", function() {
+describe("Configuration creation and editing", function() {
 
-  test('Expect the config directory to be created', function(done) {
+  it('Expects the config directory to be created', function(done) {
     fs.stat(path.join(__dirname, 'mocks/testHome/.sundry'), function(err, stats) {
       expect(stats.isDirectory()).to.be.true
       done()
     })
   })
 
-  test('Creates config, with default values', function() {
+  it('Creates config, with default values', function() {
     expect(created).to.be.true
   })
 
-  test('Creates ssl directory in /.sundry', function(done) {
+  it('Creates ssl directory in /.sundry', function(done) {
     fs.stat(path.join(__dirname, 'mocks/testHome/.sundry', 'ssl'), function(err, stats) {
       expect(stats.isDirectory()).to.be.true
       done()

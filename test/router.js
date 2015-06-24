@@ -3,12 +3,12 @@ var path = require('path')
 var mockRedis = require('./mocks/Redis_mock');
 var Router = require(path.join(process.cwd(), 'lib/Router'))
 
-suite("Router", function() {
+describe("Router", function() {
 
-  suite("Host lookup", function(){
+  describe("Host lookup", function(){
     var router = new Router({client: mockRedis})
 
-    test('It should find the host',function(done){
+    it('Should find the host',function(done){
         router.findRoute('a.test.host', function(route){
           expect(route.host).to.equal('127.0.0.1')
           expect(route.port).to.equal('10000')
@@ -16,7 +16,7 @@ suite("Router", function() {
         })
     });
 
-    test('It should load balance', function(done){
+    it('Should load balance', function(done){
       var count = 4
       var callDone = function(){
         if(!(count -= 1)) {
@@ -47,15 +47,15 @@ suite("Router", function() {
     })
   });
 
-  suite('Caching', function(){
+  describe('Caching', function(){
     var router = new Router({client: mockRedis, ttl: .4})
-    test("Should cache the host provided", function(){
+    it("Should cache the host provided", function(){
       var cached = router.cacheRoute("an.added.host", ["127.0.0.1:8000"])
       expect(cached.routes).to.be.a('array')
       expect(cached.routes.length).to.equal(1)
     });
 
-    test("Retrieves the previously cached host", function(done){
+    it("Retrieves the previously cached host", function(done){
       router.findRoute('an.added.host', function(route){
         expect(route.host).to.equal('127.0.0.1')
         expect(route.port).to.equal('8000')
@@ -64,7 +64,7 @@ suite("Router", function() {
       })
     });
 
-    test("Routes expire when they should.", function(done){
+    it("Routes expire when they should.", function(done){
       setTimeout(function(){
         router.findRoute('an.added.host', function(route){
           expect(route).to.equal(false)
