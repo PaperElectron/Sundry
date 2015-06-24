@@ -48,7 +48,6 @@ describe("Config Loader - File absent", function() {
 describe("Config Loader - with file", function() {
   var config;
   var fileAbsentBefore = function(done) {
-    console.log('2 starting');
     process.env.HOME = path.join(__dirname, './mocks/mockHome');
     process.env.sundry_redis_url = 'redis://new.url:6379/0';
     config = require('../lib/Configuration/configLoader');
@@ -82,7 +81,6 @@ describe("Config Loader - with file", function() {
 describe("Config Loader - with file and ENV overrides", function() {
   var config;
   var EnvBefore = function(done) {
-    console.log('2 starting');
     process.env.HOME = path.join(__dirname, './mocks/mockHome');
     process.env.sundry_redis_url = 'redis://new.url:6379/0';
     process.env.sundry_bind_address = '9.9.9.9';
