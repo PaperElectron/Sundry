@@ -5,5 +5,6 @@
 *.log
 .DS_Store
 env.json
-/test/mocks/.octorp
+/test/mocks/.sundry
+/test/mocks/testHome
 /scratch

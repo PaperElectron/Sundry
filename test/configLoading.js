@@ -3,53 +3,33 @@ var path = require('path');
 var fs = require('fs')
 var rimraf = require('rimraf')
 
-var created;
-
+var config;
 
 before(function(done){
-  process.env.HOME = path.join(__dirname, './mocks/')
+  process.env.HOME = path.join(__dirname, './mocks/testHome')
   process.env.sundry_redis_url = 'redis://new.url:6379/0';
-  var build = require('../lib/Configuration/configManager').buildConfig
-  build(function(err, wasCreated) {
-    created = wasCreated
+  config = require('../lib/Configuration/configLoader');
+  config.on('ready', function() {
     done()
-  })
+  });
 });
 
-after(function(done){
-  rimraf(path.join(__dirname,'mocks', '.sundry'), done)
-});
+after(function(){
+  var resolved = require.resolve('../lib/Configuration/configLoader');
+  delete require.cache[resolved];
+})
 
-suite("Configuration", function(){
-  console.log('Run 1');
+suite("Config Loader - File absent", function() {
 
-  suite("Creates directories and config file", function(){
 
-    test('Creates config, with default values', function(){
-        expect(created).to.be.true
-      })
-    });
+  suite('Uses defaults with no config file present', function(){
 
-    test('Creates ssl directory in /.sundry', function(done){
-      fs.stat(path.join(__dirname,'mocks', '.sundry', 'ssl'), function(err, stats){
-        expect(stats.isDirectory()).to.be.true
+    test('Expect config file to not be present', function(done) {
+      fs.stat(path.join(process.env.HOME, './sundry'), function(err, stats) {
+        expect(err.code).to.equal('ENOENT')
         done()
       })
     })
-
-})
-
-
-suite("Config Loader", function() {
-  var config;
-  before(function(done){
-    config = require('../lib/Configuration/configLoader');
-    config.on('ready', function() {
-      done()
-    });
-  });
-
-  suite('Uses defaults with no config file present', function(){
 
     test('Default config value present',function(){
       expect(config.loadedConfig.sundry_default_address).to.equal('localhost');
@@ -63,6 +43,21 @@ suite("Config Loader", function() {
       expect(config.loadedConfig.sundry_redis_url).to.equal('redis://new.url:6379/0');
     })
 
+    test('Does not leak other ENV variables', function() {
+      expect(config.loadedConfig.path).to.equal(undefined);
+    })
+
   })
 });
 
+suite("Config Loader - with file", function() {
+  before(function(){
+    process.env.HOME = path.join(__dirname, './mocks/mockHome')
+  })
+  suite('Uses correct values from file', function() {
+    test('Home directory should be correct', function() {
+      expect(process.env.HOME).to.equal(path.join(__dirname, './mocks/mockHome'))
+    })
+  })
+
+})
