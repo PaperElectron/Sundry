@@ -1,15 +1,14 @@
 var expect = require('chai').expect;
 var path = require('path')
 var mockRedis = require('./mocks/Redis_mock');
-var Router = require(path.join(process.cwd(), 'lib/Router'))
+var Router = require(path.join(process.cwd(), 'lib/Router/RobinRouter'))
 
-describe("Router", function() {
+describe("Round Robin Router", function() {
 
   describe("Host lookup", function(){
     var router = new Router({client: mockRedis})
-
     it('Should find the host',function(done){
-        router.findRoute('a.test.host', function(route){
+        router.findRoute('a.test.host', null, function(route){
           expect(route.host).to.equal('127.0.0.1')
           expect(route.port).to.equal('10000')
           done()
@@ -24,22 +23,22 @@ describe("Router", function() {
         }
       };
 
-      router.findRoute('c.test.host', function(route){
+      router.findRoute('c.test.host',null, function(route){
         expect(route.host).to.equal('127.0.0.1')
         expect(route.port).to.equal('30000')
         callDone()
       });
-      router.findRoute('c.test.host', function(route){
+      router.findRoute('c.test.host',null, function(route){
         expect(route.host).to.equal('127.0.0.1')
         expect(route.port).to.equal('30001')
         callDone()
       });
-      router.findRoute('c.test.host', function(route){
+      router.findRoute('c.test.host',null, function(route){
         expect(route.host).to.equal('127.0.0.1')
         expect(route.port).to.equal('30002')
         callDone()
       });
-      router.findRoute('c.test.host', function(route){
+      router.findRoute('c.test.host',null, function(route){
         expect(route.host).to.equal('127.0.0.1')
         expect(route.port).to.equal('30000')
         callDone()
@@ -56,7 +55,7 @@ describe("Router", function() {
     });
 
     it("Retrieves the previously cached host", function(done){
-      router.findRoute('an.added.host', function(route){
+      router.findRoute('an.added.host',null, function(route){
         expect(route.host).to.equal('127.0.0.1')
         expect(route.port).to.equal('8000')
         done()
@@ -66,7 +65,7 @@ describe("Router", function() {
 
     it("Routes expire when they should.", function(done){
       setTimeout(function(){
-        router.findRoute('an.added.host', function(route){
+        router.findRoute('an.added.host',null, function(route){
           expect(route).to.equal(false)
           done()
         })
