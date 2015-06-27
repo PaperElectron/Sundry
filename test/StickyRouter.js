@@ -12,7 +12,7 @@ var Router = require(path.join(process.cwd(), 'lib/Router/StickyRouter'))
 
 var identity;
 
-describe("Round Robin Router", function() {
+describe("Sticky Router", function() {
 
   describe("Host lookup", function(){
     var router = new Router({client: mockRedis, seed: 'test'})

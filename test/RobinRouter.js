@@ -65,10 +65,14 @@ describe("Round Robin Router", function() {
 
     it("Routes expire when they should.", function(done){
       setTimeout(function(){
-        router.findRoute('an.added.host',null, function(route){
-          expect(route).to.equal(false)
-          done()
-        })
+        var route = router.getHost('an.added.host');
+        console.log(route);
+        expect(route).to.equal(null)
+        //router.findRoute('an.added.host',null, function(route){
+        //  expect(route).to.equal(false)
+        //  done()
+        //})
+        done()
       }, 500)
     })
   })
