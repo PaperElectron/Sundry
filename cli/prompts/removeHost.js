@@ -25,25 +25,25 @@ module.exports = function(redis, utils, parsers){
         })
       })
       .then(function(host) {
-        if(host === 'exit'){ return this.exit = true }
+        if(host === 'back'){ return this.returnTo = utils.Main }
         this.host = host
         return utils.Confirm(chalk.red('Permanently delete '
         + chalk.yellow(host.split(':')[1])
         + ' and all of its registered backend routes?'))
       })
       .then(function(confirm) {
-        if(this.exit){ return 'exit' }
+        if(this.returnTo){ return }
         if(confirm) {
           return redis.deleteHost(this.host)
         }
         return confirm
       })
       .then(function(status) {
-        if(this.exit){ return utils.Main() }
+        if(this.returnTo){ return this.returnTo() }
         status
           ? console.log(chalk.green('Permanently deleted ' + this.host))
           : console.log(chalk.red('Operation cancelled!'))
-        return utils.Continue()
+        return utils.Finish(removeHost)
       })
   }
 }

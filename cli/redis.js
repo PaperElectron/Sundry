@@ -22,6 +22,14 @@ module.exports = function(client){
     listBackends: function(route){
       return client.smembersAsync(route)
     },
+    editMetaProperty: function(host, oldVal, newVal){
+      var buildNew = oldVal.split(':')[1].split(',')
+      var newData = '***data:' + buildNew[0] + ',' + newVal;
+      return client.sremAsync(host, oldVal)
+        .then(function(status) {
+          return client.saddAsync(host, newData)
+      })
+    },
     quit: function() {
       client.quit()
     }

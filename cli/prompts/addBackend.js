@@ -12,26 +12,23 @@ var chalk = require('chalk');
  * @module addBackend
  */
 
-module.exports = function(redis, utils, parsers){
+module.exports = function(redis, utils, output){
   return function addBackend(){
-    redis.listHosts()
-      .bind({})
-      .then(function(routeList) {
-        return utils.Prompt({
-          type: 'list',
-          name: 'route',
-          message: 'Select a route to see assigned route ip addresses.',
-          choices: parsers.hostList(routeList)
-
-        })
-      })
-      .then(function(host){
-        if(host === 'exit'){ return this.exit = true }
+    utils.getHostList('Select a host to see assigned route ip addresses.')
+      .then(function(host) {
+        if(host === 'back') {
+          return this.returnTo = utils.Main
+        }
         this.host = host.split(':')[1]
+        return redis.listBackends(host)
+      })
+      .then(function(backends) {
+        output.backendList('Existing backends:' + this.host, this.host, backends)
+
         return utils.Prompt({
           type: 'input',
           name: 'backend',
-          message: 'Enter backend route ip and port for ' + host + ' ie. 127.0.0.1:8001',
+          message: 'Enter route ip and port for ' + this.host + ' ie. 127.0.0.1:8001',
           validate: function(input){
             if(input.length >= 1){
               return true
@@ -42,25 +39,24 @@ module.exports = function(redis, utils, parsers){
 
       })
       .then(function(ip) {
-        if(this.exit){ return }
+        if(this.returnTo){return}
         this.ip = ip
         return utils.Confirm('Add new backend: ' + this.ip + ' for host ' + this.host)
       })
       .then(function(confirm) {
-        if(this.exit){ return }
+        if(this.returnTo){ return }
         if(confirm){
           return redis.addHost(this.host, this.ip)
         }
         return confirm
       })
       .then(function(status) {
-        if(this.exit){ return utils.Main(); }
+        if(this.returnTo){ return this.returnTo(); }
         status
           ? console.log(chalk.green('Added new backend ' + this.ip + ' for host ' + this.host))
-          : console.log(chalk.red('Operation cancelled!'))
+          : console.log(chalk.red('Add backend cancelled.'))
 
-        return utils.Continue()
-
+        return utils.Finish(addBackend);
       })
 
   }

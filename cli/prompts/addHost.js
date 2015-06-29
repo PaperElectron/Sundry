@@ -6,13 +6,34 @@
  */
 
 var chalk = require('chalk');
-
+var _ = require('lodash');
 /**
  * Add route inquirer prompt.
  * @module addHost
  */
 
-module.exports = function(redis, utils){
+
+module.exports = function(redis, utils, output){
+
+  var addBackends = function(host, ipArray){
+    return utils.Prompt({
+      type: 'input',
+      name: 'ip',
+      message: 'Enter backend route ip and port for ' + host + ' ie. 127.0.0.1:8001'
+    })
+      .then(function(ip){
+        return utils.RunAgain('Continue?','Add another backend?')
+          .then(function(runAgain){
+            if(runAgain){
+              ipArray.push(ip)
+              return addBackends(host, ipArray)
+            }
+            ipArray.push(ip);
+            return ipArray
+          })
+      })
+  }
+
   return function addHost() {
     utils.Prompt({
       type: 'input',
@@ -22,50 +43,33 @@ module.exports = function(redis, utils){
       .bind({})
       .then(function(host) {
         this.host = host
-        return utils.Prompt({
-          type: 'input',
-          name: 'ip',
-          message: 'Enter backend route ip and port for ' + host + ' ie. 127.0.0.1:8001'
-        })
+        return addBackends(host, [])
       })
-      .then(function(ip) {
-        this.ip = ip;
-        return utils.Prompt({
-          type: 'list',
-          name: 'balance',
-          default: 0,
-          message: 'Assign load balance type to this host? Default:',
-          choices: [
-            {name: 'Round robin', value: 'round'},
-            {name: 'Sticky Session', value: 'sticky'}
-          ]
-        })
+      .then(function(ipArray) {
+        this.ipArray = ipArray;
+        return utils.Meta.balance()
       })
       .then(function(balance) {
-        this.balance = balance;
-        return utils.Prompt({
-          type: 'input',
-          name: 'ttl',
-          default: 60,
-          message: 'Assign a host specific TTL, in seconds to this host? Default:'
-        })
+        this.ipArray.push('***data:balance,' + balance);
+        return utils.Meta.ttl()
       })
       .then(function(ttl){
-        this.ttl = ttl;
-        return utils.Confirm('Add new route: ' + this.host + ' -> ' + this.ip)
+        this.ipArray.push('***data:ttl,' + ttl);
+        output.backendList('Add Host ' + this.host + '?' , this.host, this.ipArray)
+        return utils.Confirm('Add new host: ' + this.host)
       })
       .then(function(confirm) {
         if(confirm){
-          return redis.addHost(this.host, this.ip)
+          return redis.addHost(this.host, this.ipArray)
         }
         return confirm
       })
       .then(function(status) {
         status
-          ? console.log(chalk.green('Added new route for ' + this.host + ' at backend ip ' + this.ip))
-          : console.log(chalk.red('Operation cancelled!'))
+          ? console.log(chalk.green('Added new route for ' + this.host))
+          : console.log(chalk.red('Add new host cancelled!'))
 
-        return utils.Continue()
+        return utils.Finish(addHost)
 
       })
   }
