@@ -2,16 +2,18 @@
 
 ### The respectably rugged, remarkably reliable, reconfigurable, round-robin reverse proxy.
 
+#### Sundry is a caching, dynamically configurable, reverse proxy, written in NodeJS and backed by redis.
 
-Sundry is a caching, dynamically configurable, reverse proxy, written in NodeJS and backed by redis.
+[![NPM Version][npm-image]][npm-url]
+[![Linux][travis-image]][travis-url]
 
 ### Cool Stuff
 * Dynamically add and remove hosts and backends with 0 downtime.
-* Wildcard https, http -> https redirect built in. 
-* Centralize request logging and error handling without exposing backend errors. 
+* Wildcard https, http -> https redirect built in.
+* Centralize request logging and error handling without exposing backend errors.
 * Programically control backend access in real time.
 
-### Features 
+### Features
 * Separate CLI app to view and manage hosts and routes.
 * Really, Really fast, workload is very nearly 100% Asyncronous (Aside from a couple of ifs and assigments on each request)
 * System Daemon, can drop privleges to bind to ports 80 and 443, or use [Authbind](http://manpages.ubuntu.com/manpages/hardy/man1/authbind.1.html).
@@ -20,9 +22,9 @@ Sundry is a caching, dynamically configurable, reverse proxy, written in NodeJS 
 
 ### Requirements
 
-* Redis server (with events enabled) 
+* Redis server (with events enabled)
   * Preferably local to the Sundry server, bare minimum on the local network.
-  * "notify-keyspace-events" 
+  * "notify-keyspace-events"
   * With "gsE" events enabled.
   * [More Info on Redis keyspace events](http://redis.io/topics/notifications)
 
@@ -38,7 +40,7 @@ Sundry is a caching, dynamically configurable, reverse proxy, written in NodeJS 
 $ npm install -g sundry
 ```
 
-#### Configuration 
+#### Configuration
 Sundry relies on several configuration values, all of which can be provided in two ways.
 
 1. Enviornment Variables. (Useful for running as a system daemon)
@@ -54,7 +56,7 @@ This will create `~/.sundry/`, `~/.sundry/ssl` and `~/.sundry/config.json`
 #### Default files
 
 Sundry uses some generic files for its default host, 404 and 500 error pages.
-You can override any of these by placing the correctly named file in 
+You can override any of these by placing the correctly named file in
 `~/.sundry/html/<index/404/5xx>.html`
 
 ## Run Sundry
@@ -82,7 +84,7 @@ $ sudo chmod 755 /etc/authbind/byport/80 /etc/authbind/byport/443
 
 ```shell
 $ sudo touch /etc/init/sundry.conf
-$ sudo <vi/emacs/nano/ed> /etc/init/sundry.conf 
+$ sudo <vi/emacs/nano/ed> /etc/init/sundry.conf
 # no flame wars here
 ```
 
@@ -96,7 +98,7 @@ stop on shutdown
 # Automatically Respawn:
 respawn
 respawn limit 5 60
- 
+
 script
   export HOME=/home/sundry
   export NODE_ENV=production
@@ -113,3 +115,8 @@ $ openssl genrsa -out key.pem 2048
 $ openssl req -new -key key.pem -out server.csr
 $ openssl x509 -req -days 365 -in server.csr -signkey key.pem -out cert.pem
 ```
+
+[npm-image]: https://img.shields.io/npm/v/sundry.svg
+[npm-url]: https://www.npmjs.com/package/sundry
+[travis-image]: https://img.shields.io/travis/PaperElectron/Sundry/master.svg
+[travis-url]: https://travis-ci.org/PaperElectron/Sundry

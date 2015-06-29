@@ -70,7 +70,7 @@ function mainPrompt() {
     choices: [
       {name: chalk.green('List Host Info'), value: 'list'},
       {name: chalk.green('Add Host'), value: 'add'},
-      {name: chalk.green('Add/Edit Host backend'), value: 'addBackend'},
+      {name: chalk.green('Add Host backend'), value: 'addBackend'},
       {name: chalk.green('Edit Host metadata'), value: 'addMeta'},
       {name: chalk.yellow('Remove Host'), value: 'removeHost'},
       {name: chalk.yellow('Remove Host backend'), value: 'removeBackend'},
@@ -80,27 +80,30 @@ function mainPrompt() {
     .then(function(answer) {
       switch (answer) {
         case 'list':
-          require('./prompts/listHosts')(red, utilities, output)()
+          return require('./prompts/listHosts')(red, utilities, output)();
           break;
         case 'add':
-          require('./prompts/addHost')(red, utilities, output)()
+          return require('./prompts/addHost')(red, utilities, output)();
           break;
         case 'addBackend':
-          require('./prompts/addBackend')(red, utilities, output)()
+          return require('./prompts/addBackend')(red, utilities, output)();
           break;
         case 'addMeta':
-          require('./prompts/editMetadata')(red, utilities, output)()
+          return require('./prompts/editMetadata')(red, utilities, output)();
           break;
         case 'removeHost':
-          require('./prompts/removeHost')(red, utilities, output)()
+          return require('./prompts/removeHost')(red, utilities, output)();
           break;
         case 'removeBackend':
-          require('./prompts/removeBackend')(red, utilities, output)()
+          return require('./prompts/removeBackend')(red, utilities, output)();
           break;
         case 'exit':
           process.stdout.write('\033c');
           process.exit();
       }
+    }).catch(function(err){
+      console.log(chalk.red('There was an error in the last command.'));
+      continuePrompt();
     });
 };
 

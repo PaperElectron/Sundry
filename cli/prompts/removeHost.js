@@ -13,17 +13,7 @@ var chalk = require('chalk');
 
 module.exports = function(redis, utils, parsers){
   return function removeHost() {
-    redis.listHosts()
-      .bind({})
-      .then(function(routeList) {
-        return utils.Prompt({
-          type: 'list',
-          name: 'route',
-          message: 'Select a host to delete',
-          choices: parsers.hostList(routeList)
-
-        })
-      })
+    return utils.getHostList('Select a host to delete.')
       .then(function(host) {
         if(host === 'back'){ return this.returnTo = utils.Main }
         this.host = host

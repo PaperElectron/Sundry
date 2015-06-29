@@ -12,7 +12,7 @@
 
 module.exports = function(redis, utils, output){
   return function listHosts() {
-    utils.getHostList('Select a route to see host details.')
+    return utils.getHostList('Select a route to see host details.')
       .then(function(host) {
         if(host === 'back'){
           return this.returnTo = utils.Main

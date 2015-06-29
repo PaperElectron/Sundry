@@ -13,17 +13,7 @@ var chalk = require('chalk');
 module.exports = function(redis, utils, parsers){
 
   return function removeBackend(){
-    redis.listHosts()
-      .bind({})
-      .then(function(hosts) {
-        return utils.Prompt({
-          type: 'list',
-          name: 'route',
-          message: 'Select a route to see assigned route ip addresses.',
-          choices: parsers.hostList(hosts)
-
-        })
-      })
+    return utils.getHostList('Select a host to see registered backends.')
       .then(function(host) {
         if(host === 'back'){ return this.returnTo = utils.Main }
         this.host = host;

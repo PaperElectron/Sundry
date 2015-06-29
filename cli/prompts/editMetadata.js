@@ -56,17 +56,7 @@ module.exports = function(redis, utils, output) {
   }
 
   function editMetadata() {
-    redis.listHosts()
-      .bind({})
-      .then(function(hosts) {
-        return utils.Prompt({
-          type: 'list',
-          name: 'route',
-          message: 'Select a host to edit metadata.',
-          choices: output.hostList(hosts)
-
-        })
-      })
+    return utils.getHostList('Select a host to edit metadata.')
       .then(function(host) {
         if(host === 'back') {
           return this.returnTo = utils.Main

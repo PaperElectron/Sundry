@@ -35,7 +35,7 @@ module.exports = function(redis, utils, output){
   }
 
   return function addHost() {
-    utils.Prompt({
+    return utils.Prompt({
       type: 'input',
       name: 'host',
       message: 'Enter hostname. ex. site.example.com or example.com'

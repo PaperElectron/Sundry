@@ -14,7 +14,7 @@ var chalk = require('chalk');
 
 module.exports = function(redis, utils, output){
   return function addBackend(){
-    utils.getHostList('Select a host to see assigned route ip addresses.')
+    return utils.getHostList('Select a host to see assigned route ip addresses.')
       .then(function(host) {
         if(host === 'back') {
           return this.returnTo = utils.Main
@@ -36,7 +36,6 @@ module.exports = function(redis, utils, output){
             return 'You must provide a value for backend IP.'
           }
         })
-
       })
       .then(function(ip) {
         if(this.returnTo){return}
