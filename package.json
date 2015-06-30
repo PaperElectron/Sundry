@@ -1,6 +1,6 @@
 {
   "name": "sundry",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "A dynamically configurable, load balancing, reverse proxy.",
   "main": "index.js",
   "scripts": {
