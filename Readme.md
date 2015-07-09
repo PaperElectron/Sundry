@@ -8,12 +8,12 @@
 [![Linux][travis-image]][travis-url]
 
 ### Cool Stuff
-* Multiple load balancing modes, inclusing Sticky Sessions, Round robin, and application controlled.
-* Balance mode and Cache time configurable per host. 
+* Multiple load balancing modes, including Sticky Sessions, Round robin, and application controlled.
+* Balance mode and Cache time configurable per host.
 * Dynamically add and remove hosts and backends with 0 downtime.
 * Wildcard https, http -> https redirect built in.
 * Centralize request logging and error handling without exposing backend errors.
-* Programically control access to backends in real time.
+* Programmatically control access to backends in real time.
 
 ### Features
 * Separate CLI app to view and manage hosts and routes.
@@ -81,12 +81,12 @@ $ sundry -h
 ## Run Sundry
 
 #### From CLI locally
-######simply run 
+######simply run
 
 ```shell
 $ sundry start
 ```
-This will start sundry on your local machine, to take full advantage of its features, you will probably want to be running Dnsmasq 
+This will start sundry on your local machine, to take full advantage of its features, you will probably want to be running Dnsmasq
 on your router.
 
 Add something like this to Dnsmasq 'Additional DNS Options', obviously replacing host and ip with your own.
@@ -98,8 +98,8 @@ address=/.my-computer.internal/192.168.1.3
 Now you should be able to point your browser at *.my-computer.internal and sundry will handle the routing from there.
 
 [More info on Dnsmasq](http://www.dd-wrt.com/wiki/index.php/DNSMasq_-_DNS_for_your_local_network_-_HOWTO)
- 
- 
+
+
 
 #### Production (some recent flavor of Ubuntu assumed.)
 ###### Create a new system user
