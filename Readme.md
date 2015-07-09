@@ -8,10 +8,12 @@
 [![Linux][travis-image]][travis-url]
 
 ### Cool Stuff
+* Multiple load balancing modes, inclusing Sticky Sessions, Round robin, and application controlled.
+* Balance mode and Cache time configurable per host. 
 * Dynamically add and remove hosts and backends with 0 downtime.
 * Wildcard https, http -> https redirect built in.
 * Centralize request logging and error handling without exposing backend errors.
-* Programically control backend access in real time.
+* Programically control access to backends in real time.
 
 ### Features
 * Separate CLI app to view and manage hosts and routes.
@@ -59,7 +61,45 @@ Sundry uses some generic files for its default host, 404 and 500 error pages.
 You can override any of these by placing the correctly named file in
 `~/.sundry/html/<index/404/5xx>.html`
 
+## Add and edit hosts.
+
+You can list, add and remove hosts from any computer that can connect to the Redis database that Sundry is using.
+
+The easiest way is to simply run:
+
+```shell
+$ sundry -i
+```
+![Cli example](http://i.imgur.com/dNddm1B.png)
+
+This will give you a pretty robust interactive cli which can be used to manage every aspect of the hosts registered with the system.
+Other config options are available with:
+```shell
+$ sundry -h
+```
+
 ## Run Sundry
+
+#### From CLI locally
+######simply run 
+
+```shell
+$ sundry start
+```
+This will start sundry on your local machine, to take full advantage of its features, you will probably want to be running Dnsmasq 
+on your router.
+
+Add something like this to Dnsmasq 'Additional DNS Options', obviously replacing host and ip with your own.
+
+```
+address=/.my-computer.internal/192.168.1.3
+```
+
+Now you should be able to point your browser at *.my-computer.internal and sundry will handle the routing from there.
+
+[More info on Dnsmasq](http://www.dd-wrt.com/wiki/index.php/DNSMasq_-_DNS_for_your_local_network_-_HOWTO)
+ 
+ 
 
 #### Production (some recent flavor of Ubuntu assumed.)
 ###### Create a new system user
