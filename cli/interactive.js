@@ -34,7 +34,8 @@ var utilities = {
   handleError: handleError,
   Meta: {
     balance: balancePrompt,
-    ttl: ttlPrompt
+    ttl: ttlPrompt,
+    protocol: protocolPrompt
   }
 }
 
@@ -201,6 +202,9 @@ function handleError(err, fn){
   }
 }
 
+/**
+ * Metadata Prompts
+ */
 function balancePrompt() {
   return Prompt({
     type: 'list',
@@ -223,7 +227,20 @@ function ttlPrompt(){
   })
 }
 
-/*
+function protocolPrompt(){
+  return Prompt({
+    type: 'list',
+    name: 'protocol',
+    default: 0,
+    message: 'Assign protocol for this host. Default:',
+    choices: [
+      {name: 'Http', value: 'http'},
+      {name: 'WebSocket', value: 'socket'}
+    ]
+  })
+}
+
+/**
  * Outputters
  */
 function backendlist(title, host, arrayData) {

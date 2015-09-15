@@ -53,8 +53,12 @@ module.exports = function(redis, utils, output){
         this.ipArray.push('***data:balance,' + balance);
         return utils.Meta.ttl()
       })
-      .then(function(ttl){
+      .then(function(ttl) {
         this.ipArray.push('***data:ttl,' + ttl);
+        return utils.Meta.protocol()
+      })
+      .then(function(protocol){
+        this.ipArray.push('***data:protocol,' + protocol);
         output.backendList('Add Host ' + this.host + '?' , this.host, this.ipArray)
         return utils.Confirm('Add new host: ' + this.host)
       })
